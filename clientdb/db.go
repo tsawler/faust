@@ -196,7 +196,6 @@ func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
 			&s.FirstName,
 			&s.Email,
 		)
-		fmt.Println("Found", s.FirstName)
 		members = append(members, *s)
 	}
 	return members, nil
