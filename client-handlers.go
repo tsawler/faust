@@ -155,13 +155,15 @@ func SendInvitationsPT(w http.ResponseWriter, r *http.Request) {
 	}
 
 	serverURL := app.ServerURL
-
+	count := 0
 	for _, x := range pt {
-		linkEn := fmt.Sprintf("%s/faust/pt-vote/%d", serverURL, x.ID)
-		urlsigner.NewURLSigner(app.URLSignerKey)
-		signedLinkEn := urlsigner.GenerateTokenFromString(linkEn)
+		if x.Voted == 0 {
+			count++
+			linkEn := fmt.Sprintf("%s/faust/pt-vote/%d", serverURL, x.ID)
+			urlsigner.NewURLSigner(app.URLSignerKey)
+			signedLinkEn := urlsigner.GenerateTokenFromString(linkEn)
 
-		html := fmt.Sprintf(`
+			html := fmt.Sprintf(`
 <p>Dear %s:</p>
 
 <p>Please use the link below to cast your vote to ratify the collective agreement for your unit. Note that voting is anonymous, and that the link below will only work once.</p>
@@ -173,27 +175,29 @@ func SendInvitationsPT(w http.ResponseWriter, r *http.Request) {
 <p><a class="btn btn-primary" href="%s">Click here to cast your vote</a"></p>
 `, x.FirstName, signedLinkEn)
 
-		mailMessage := channel_data.MailData{
-			ToName:      "",
-			ToAddress:   x.Email,
-			FromName:    "FAUST",
-			FromAddress: "faust@stu.ca",
-			Subject:     "Online vote to ratify agreement",
-			Content:     template.HTML(html),
-			Template:    "generic-email.mail.tmpl",
-			CC:          nil,
-			UseHermes:   false,
-			Attachments: nil,
-			StringMap:   nil,
-			IntMap:      nil,
-			FloatMap:    nil,
-			RowSets:     nil,
-		}
+			mailMessage := channel_data.MailData{
+				ToName:      "",
+				ToAddress:   x.Email,
+				FromName:    "FAUST",
+				FromAddress: "faust@stu.ca",
+				Subject:     "Online vote to ratify agreement",
+				Content:     template.HTML(html),
+				Template:    "generic-email.mail.tmpl",
+				CC:          nil,
+				UseHermes:   false,
+				Attachments: nil,
+				StringMap:   nil,
+				IntMap:      nil,
+				FloatMap:    nil,
+				RowSets:     nil,
+			}
 
-		helpers.SendEmail(mailMessage)
+			helpers.SendEmail(mailMessage)
+		}
 	}
 
-	w.Write([]byte("Sent"))
+	session.Put(r.Context(), "flash", fmt.Sprintf("%d messages sent!", count))
+	http.Redirect(w, r, "/admin/votes/send", http.StatusSeeOther)
 }
 
 func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
@@ -205,13 +209,15 @@ func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
 	}
 
 	serverURL := app.ServerURL
-
+	count := 0
 	for _, x := range pt {
-		linkEn := fmt.Sprintf("%s/faust/ft-vote/%d", serverURL, x.ID)
-		urlsigner.NewURLSigner(app.URLSignerKey)
-		signedLinkEn := urlsigner.GenerateTokenFromString(linkEn)
+		if x.Voted == 0 {
+			count++
+			linkEn := fmt.Sprintf("%s/faust/ft-vote/%d", serverURL, x.ID)
+			urlsigner.NewURLSigner(app.URLSignerKey)
+			signedLinkEn := urlsigner.GenerateTokenFromString(linkEn)
 
-		html := fmt.Sprintf(`
+			html := fmt.Sprintf(`
 <p>Dear %s:</p>
 
 <p>Please use the link below to cast your vote to ratify the collective agreement for your unit. Note that voting is anonymous, and that the link below will only work once.</p>
@@ -223,27 +229,29 @@ func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
 <p><a class="btn btn-primary" href="%s">Click here to cast your vote</a"></p>
 `, x.FirstName, signedLinkEn)
 
-		mailMessage := channel_data.MailData{
-			ToName:      "",
-			ToAddress:   x.Email,
-			FromName:    "FAUST",
-			FromAddress: "faust@stu.ca",
-			Subject:     "Online vote to ratify agreement",
-			Content:     template.HTML(html),
-			Template:    "generic-email.mail.tmpl",
-			CC:          nil,
-			UseHermes:   false,
-			Attachments: nil,
-			StringMap:   nil,
-			IntMap:      nil,
-			FloatMap:    nil,
-			RowSets:     nil,
-		}
+			mailMessage := channel_data.MailData{
+				ToName:      "",
+				ToAddress:   x.Email,
+				FromName:    "FAUST",
+				FromAddress: "faust@stu.ca",
+				Subject:     "Online vote to ratify agreement",
+				Content:     template.HTML(html),
+				Template:    "generic-email.mail.tmpl",
+				CC:          nil,
+				UseHermes:   false,
+				Attachments: nil,
+				StringMap:   nil,
+				IntMap:      nil,
+				FloatMap:    nil,
+				RowSets:     nil,
+			}
 
-		helpers.SendEmail(mailMessage)
+			helpers.SendEmail(mailMessage)
+		}
 	}
 
-	w.Write([]byte("Sent"))
+	session.Put(r.Context(), "flash", fmt.Sprintf("%d messages sent!", count))
+	http.Redirect(w, r, "/admin/votes/send", http.StatusSeeOther)
 }
 
 func VoteResults(w http.ResponseWriter, r *http.Request) {
