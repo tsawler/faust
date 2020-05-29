@@ -308,3 +308,7 @@ func VoteResults(w http.ResponseWriter, r *http.Request) {
 		StringMap: stringMap,
 	})
 }
+
+func SendInvitePage(w http.ResponseWriter, r *http.Request) {
+	helpers.Render(w, r, "send-invites.page.tmpl", &templates.TemplateData{})
+}

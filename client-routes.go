@@ -19,9 +19,9 @@ func ClientRoutes(mux *pat.PatternServeMux, standardMiddleWare, dynamicMiddlewar
 	mux.Get("/faust/pt-vote/:ID", dynamicMiddleware.ThenFunc(DisplayPTVoteForm))
 	mux.Post("/faust/pt-vote", dynamicMiddleware.ThenFunc(PostPT))
 
+	mux.Get("/admin/votes/send", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(SendInvitePage))
 	mux.Get("/faust/invite/pt", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(SendInvitationsPT))
 	mux.Get("/faust/invite/ft", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(SendInvitationsFT))
-
 	mux.Get("/admin/votes/results", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(VoteResults))
 	// public folder
 	fileServer := http.FileServer(http.Dir("./client/clienthandlers/public/"))
