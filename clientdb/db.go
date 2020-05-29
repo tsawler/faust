@@ -150,7 +150,7 @@ func (m *DBModel) GetAllFTMembers() ([]clientmodels.FTMember, error) {
 
 	var members []clientmodels.FTMember
 
-	query := "select id, first_name, email from ft_members order by id"
+	query := "select id, first_name, email, voted from ft_members order by id"
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	defer rows.Close()
@@ -166,6 +166,7 @@ func (m *DBModel) GetAllFTMembers() ([]clientmodels.FTMember, error) {
 			&s.ID,
 			&s.FirstName,
 			&s.Email,
+			&s.Voted,
 		)
 		members = append(members, *s)
 	}
@@ -179,7 +180,7 @@ func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
 
 	var members []clientmodels.PTMember
 
-	query := "select id, first_name, email from pt_members order by id"
+	query := "select id, first_name, email, voted from pt_members order by id"
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	defer rows.Close()
@@ -195,8 +196,47 @@ func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
 			&s.ID,
 			&s.FirstName,
 			&s.Email,
+			&s.Voted,
 		)
 		members = append(members, *s)
 	}
 	return members, nil
+}
+
+func (m *DBModel) GetPTResults() (int, int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var y, n int
+
+	query := "select yes, no from vote_totals where id = 2"
+
+	row := m.DB.QueryRowContext(ctx, query)
+	err := row.Scan(
+		&y,
+		&n,
+	)
+	if err != nil {
+		return y, n, err
+	}
+	return y, n, nil
+}
+
+func (m *DBModel) GetFTResults() (int, int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var y, n int
+
+	query := "select yes, no from vote_totals where id = 1"
+
+	row := m.DB.QueryRowContext(ctx, query)
+	err := row.Scan(
+		&y,
+		&n,
+	)
+	if err != nil {
+		return y, n, err
+	}
+	return y, n, nil
 }

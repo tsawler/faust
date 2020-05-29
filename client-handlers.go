@@ -247,32 +247,64 @@ func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
 }
 
 func VoteResults(w http.ResponseWriter, r *http.Request) {
-	ft, err := dbModel.GetAllFTMembers()
-	pt, err := dbModel.GetAllPTMembers()
+	ft, _ := dbModel.GetAllFTMembers()
+	pt, _ := dbModel.GetAllPTMembers()
 
 	intMap := make(map[string]int)
 	intMap["no_ft"] = len(ft)
 	intMap["no_pt"] = len(pt)
 
-	resp_ft := 0
-	resp_pt := 0
+	respFt := 0
+	respPt := 0
 
 	for _, x := range ft {
 		if x.Voted == 1 {
-			resp_ft++
+			respFt++
 		}
 	}
 
 	for _, x := range pt {
 		if x.Voted == 1 {
-			resp_pt++
+			respPt++
 		}
 	}
 
-	intMap["resp_ft"] = resp_ft
-	intMap["resp_pt"] = resp_pt
+	intMap["resp_ft"] = respFt
+	intMap["resp_pt"] = respPt
+
+	stringMap := make(map[string]string)
+
+	pctFt := float32(respFt) / float32(len(ft))
+	pctPt := float32(respPt) / float32(len(pt))
+
+	percentFT := fmt.Sprintf("%.2f", pctFt*100)
+	percentPT := fmt.Sprintf("%.2f", pctPt*100)
+
+	stringMap["pct_ft"] = percentFT
+	stringMap["pct_pt"] = percentPT
+
+	// get results
+	ptY, ptN, err := dbModel.GetPTResults()
+	if err != nil {
+		errorLog.Println(err)
+		helpers.ClientError(w, http.StatusBadRequest)
+		return
+	}
+
+	ftY, ftN, err := dbModel.GetFTResults()
+	if err != nil {
+		errorLog.Println(err)
+		helpers.ClientError(w, http.StatusBadRequest)
+		return
+	}
+
+	intMap["ft_y"] = ftY
+	intMap["ft_n"] = ftN
+	intMap["pt_y"] = ptY
+	intMap["pt_n"] = ptN
 
 	helpers.Render(w, r, "vote-results.page.tmpl", &templates.TemplateData{
-		IntMap: intMap,
+		IntMap:    intMap,
+		StringMap: stringMap,
 	})
 }
