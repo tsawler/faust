@@ -5,7 +5,6 @@ import (
 	"github.com/tsawler/goblender/client/clienthandlers/clientmodels"
 	channel_data "github.com/tsawler/goblender/pkg/channel-data"
 	"github.com/tsawler/goblender/pkg/helpers"
-	"github.com/tsawler/goblender/pkg/models"
 	"github.com/tsawler/goblender/pkg/templates"
 	"github.com/tsawler/goblender/pkg/urlsigner"
 	"html/template"
@@ -21,15 +20,6 @@ type JSONResponse struct {
 
 // DisplayFTVoteForm displays ft form
 func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
-	pg := models.Page{}
-	helpers.Render(w, r, "ft-vote.page.tmpl", &templates.TemplateData{
-		Page: pg,
-	})
-}
-
-// DisplayPTVoteForm displays pt form
-func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
-
 	// validate the link
 	url := r.RequestURI
 	testURL := fmt.Sprintf("%s%s", app.ServerURL, url)
@@ -37,8 +27,40 @@ func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	okay := urlsigner.VerifyToken(testURL)
 
 	if !okay {
-		// invalid url signature, so just throw a generic error page at the user
-		helpers.ClientError(w, http.StatusBadRequest)
+		session.Put(r.Context(), "error", "Invalid URL!")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// make sure they have not voted already
+	id, _ := strconv.Atoi(r.URL.Query().Get(":ID"))
+	member, err := dbModel.GetFTMember(id)
+	if err != nil {
+		session.Put(r.Context(), "error", "Invalid URL!")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	if member.Voted == 1 {
+		session.Put(r.Context(), "error", "You have already voted")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	helpers.Render(w, r, "ft-vote.page.tmpl", &templates.TemplateData{})
+}
+
+// DisplayPTVoteForm displays pt form
+func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
+	// validate the link
+	url := r.RequestURI
+	testURL := fmt.Sprintf("%s%s", app.ServerURL, url)
+	urlsigner.NewURLSigner(app.URLSignerKey)
+	okay := urlsigner.VerifyToken(testURL)
+
+	if !okay {
+		session.Put(r.Context(), "error", "Invalid URL!")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
@@ -61,6 +83,15 @@ func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	helpers.Render(w, r, "pt-vote.page.tmpl", &templates.TemplateData{})
 }
 
+func PostPT(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func PostFT(w http.ResponseWriter, r *http.Request) {
+
+}
+
+// SendInvitations sends the invitations
 func SendInvitations(w http.ResponseWriter, r *http.Request) {
 	var pt []clientmodels.PTMember
 
