@@ -16,7 +16,7 @@
                 <a href="javascript:" class="btn btn-danger" onclick="no()">No</a>
 
                 <form method="post" action="/faust/ft-vote" id="vote-form">
-                    <input type="hidden" name="email" value="">
+                    <input type="hidden" name="id" value="{{index .IntMap "id"}}">
                     <input type="hidden" name="vote" id="vote" value="">
                     <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                 </form>

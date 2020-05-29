@@ -46,7 +46,12 @@ func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.Render(w, r, "ft-vote.page.tmpl", &templates.TemplateData{})
+	intMap := make(map[string]int)
+	intMap["id"] = id
+
+	helpers.Render(w, r, "ft-vote.page.tmpl", &templates.TemplateData{
+		IntMap: intMap,
+	})
 }
 
 // DisplayPTVoteForm displays pt form
@@ -82,7 +87,12 @@ func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.Render(w, r, "pt-vote.page.tmpl", &templates.TemplateData{})
+	intMap := make(map[string]int)
+	intMap["id"] = id
+
+	helpers.Render(w, r, "pt-vote.page.tmpl", &templates.TemplateData{
+		IntMap: intMap,
+	})
 }
 
 // PostPT handle voting of FT member
