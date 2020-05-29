@@ -51,6 +51,8 @@ func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
 
 // DisplayPTVoteForm displays pt form
 func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
+	session.Put(r.Context(), "lang", "en")
+
 	// validate the link
 	url := r.RequestURI
 	testURL := fmt.Sprintf("%s%s", app.ServerURL, url)
@@ -58,6 +60,7 @@ func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	okay := urlsigner.VerifyToken(testURL)
 
 	if !okay {
+		infoLog.Println("checking url failed")
 		session.Put(r.Context(), "error", "Invalid URL!")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -104,7 +107,7 @@ func SendInvitations(w http.ResponseWriter, r *http.Request) {
 	serverURL := app.ServerURL
 
 	for _, x := range pt {
-		linkEn := fmt.Sprintf("%s/faust/pt-vote/%d", serverURL, 1)
+		linkEn := fmt.Sprintf("%s/faust/pt-vote/%d", serverURL, x.ID)
 		urlsigner.NewURLSigner(app.URLSignerKey)
 		signedLinkEn := urlsigner.GenerateTokenFromString(linkEn)
 
@@ -123,8 +126,8 @@ func SendInvitations(w http.ResponseWriter, r *http.Request) {
 		mailMessage := channel_data.MailData{
 			ToName:      "",
 			ToAddress:   x.Email,
-			FromName:    "NBTAP/PAJNB",
-			FromAddress: "info@nbtap.ca",
+			FromName:    "FAUST",
+			FromAddress: "faust@stu.ca",
 			Subject:     "Online vote to ratify agreement",
 			Content:     template.HTML(html),
 			Template:    "generic-email.mail.tmpl",
