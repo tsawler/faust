@@ -47,12 +47,16 @@ func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	member, err := dbModel.GetPTMember(id)
 	if err != nil {
 		// invalid url signature, so just throw a generic error page at the user
-		errorLog.Println(err)
-		helpers.ClientError(w, http.StatusBadRequest)
+		session.Put(r.Context(), "error", "Invalid URL!")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	infoLog.Println("Member:", member.FirstName)
+	if member.Voted == 1 {
+		session.Put(r.Context(), "error", "You have already voted")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 
 	helpers.Render(w, r, "pt-vote.page.tmpl", &templates.TemplateData{})
 }
