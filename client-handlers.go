@@ -83,10 +83,12 @@ func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	helpers.Render(w, r, "pt-vote.page.tmpl", &templates.TemplateData{})
 }
 
+// PostPT handle voting of FT member
 func PostPT(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// PostFT handle voting of PT member
 func PostFT(w http.ResponseWriter, r *http.Request) {
 
 }
