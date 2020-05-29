@@ -179,7 +179,7 @@ func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
 
 	var members []clientmodels.PTMember
 
-	query := "select id, first_name, email from ft_members order by id"
+	query := "select id, first_name, email from pt_members order by id"
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	defer rows.Close()
@@ -196,6 +196,7 @@ func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
 			&s.FirstName,
 			&s.Email,
 		)
+		fmt.Println("Found", s.FirstName)
 		members = append(members, *s)
 	}
 	return members, nil
