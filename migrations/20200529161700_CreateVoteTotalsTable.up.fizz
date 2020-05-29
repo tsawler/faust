@@ -13,3 +13,4 @@ sql(`CREATE TRIGGER set_timestamp
 EXECUTE PROCEDURE trigger_set_timestamp();`)
 
 sql("insert into vote_totals (yes, no) values (0, 0)")
+sql("insert into vote_totals (yes, no) values (0, 0)")

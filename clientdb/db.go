@@ -59,3 +59,79 @@ func (m *DBModel) GetFTMember(id int) (clientmodels.FTMember, error) {
 
 	return s, nil
 }
+
+func (m *DBModel) VoteYesFT(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `update vote_totals set yes = yes + 1 where id = 1`
+	_, err := m.DB.ExecContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	query = `update ft_members set voted = 1 where id = $1`
+	_, err = m.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DBModel) VoteNoFT(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `update vote_totals set no = no + 1 where id = 1`
+	_, err := m.DB.ExecContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	query = `update ft_members set voted = 1 where id = $1`
+	_, err = m.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DBModel) VoteYesPT(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `update vote_totals set yes = yes + 1 where id = 2`
+	_, err := m.DB.ExecContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	query = `update pt_members set voted = 1 where id = $1`
+	_, err = m.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DBModel) VoteNoPT(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `update vote_totals set no = no + 1 where id = 2`
+	_, err := m.DB.ExecContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	query = `update pt_members set voted = 1 where id = $1`
+	_, err = m.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
