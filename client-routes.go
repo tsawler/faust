@@ -14,8 +14,8 @@ func ClientRoutes(mux *pat.PatternServeMux, standardMiddleWare, dynamicMiddlewar
 	// we can override routes in goblender, if we wish, e.g.
 	//mux.Get("/", dynamicMiddleware.ThenFunc(pageHandlers.Home))
 
-	mux.Get("/faust/ft-vote", standardMiddleWare.ThenFunc(DisplayFTVoteForm))
-	mux.Get("/faust/pt-vote", standardMiddleWare.ThenFunc(DisplayPTVoteForm))
+	mux.Get("/faust/ft-vote/:ID", standardMiddleWare.ThenFunc(DisplayFTVoteForm))
+	mux.Get("/faust/pt-vote/:ID", standardMiddleWare.ThenFunc(DisplayPTVoteForm))
 
 	// public folder
 	fileServer := http.FileServer(http.Dir("./client/clienthandlers/public/"))

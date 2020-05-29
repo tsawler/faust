@@ -7,6 +7,7 @@ import (
 // FTMember describes a member
 type FTMember struct {
 	ID        int
+	FirstName string
 	Email     string
 	Voted     int
 	CreatedAt time.Time
@@ -16,6 +17,7 @@ type FTMember struct {
 // PTMember describes a pt member
 type PTMember struct {
 	ID        int
+	FirstName string
 	Email     string
 	Voted     int
 	CreatedAt time.Time
