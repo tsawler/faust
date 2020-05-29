@@ -97,12 +97,52 @@ func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 
 // PostPT handle voting of FT member
 func PostPT(w http.ResponseWriter, r *http.Request) {
+	id, _ := strconv.Atoi(r.Form.Get("id"))
+	vote, _ := strconv.Atoi(r.Form.Get("vote"))
 
+	if vote == 0 {
+		err := dbModel.VoteNoPT(id)
+		if err != nil {
+			errorLog.Println(err)
+			helpers.ClientError(w, http.StatusBadRequest)
+			return
+		}
+	} else {
+		err := dbModel.VoteYesPT(id)
+		if err != nil {
+			errorLog.Println(err)
+			helpers.ClientError(w, http.StatusBadRequest)
+			return
+		}
+	}
+
+	session.Put(r.Context(), "modal", "Your vote has been recorded!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // PostFT handle voting of PT member
 func PostFT(w http.ResponseWriter, r *http.Request) {
+	id, _ := strconv.Atoi(r.Form.Get("id"))
+	vote, _ := strconv.Atoi(r.Form.Get("vote"))
 
+	if vote == 0 {
+		err := dbModel.VoteNoFT(id)
+		if err != nil {
+			errorLog.Println(err)
+			helpers.ClientError(w, http.StatusBadRequest)
+			return
+		}
+	} else {
+		err := dbModel.VoteYesFT(id)
+		if err != nil {
+			errorLog.Println(err)
+			helpers.ClientError(w, http.StatusBadRequest)
+			return
+		}
+	}
+
+	session.Put(r.Context(), "modal", "Your vote has been recorded!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // SendInvitations sends the invitations

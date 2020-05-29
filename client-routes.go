@@ -14,10 +14,10 @@ func ClientRoutes(mux *pat.PatternServeMux, standardMiddleWare, dynamicMiddlewar
 	//mux.Get("/", dynamicMiddleware.ThenFunc(pageHandlers.Home))
 
 	mux.Get("/faust/ft-vote/:ID", dynamicMiddleware.ThenFunc(DisplayFTVoteForm))
-	mux.Post("/faust/ft-vote/:ID", dynamicMiddleware.ThenFunc(PostFT))
+	mux.Post("/faust/ft-vote", dynamicMiddleware.ThenFunc(PostFT))
 
 	mux.Get("/faust/pt-vote/:ID", dynamicMiddleware.ThenFunc(DisplayPTVoteForm))
-	mux.Post("/faust/pt-vote/:ID", dynamicMiddleware.ThenFunc(PostPT))
+	mux.Post("/faust/pt-vote", dynamicMiddleware.ThenFunc(PostPT))
 
 	mux.Get("/faust/invite/pt", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(SendInvitationsPT))
 	mux.Get("/faust/invite/ft", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(SendInvitationsFT))
