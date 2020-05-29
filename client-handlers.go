@@ -2,6 +2,7 @@ package clienthandlers
 
 import (
 	"github.com/tsawler/goblender/pkg/helpers"
+	"github.com/tsawler/goblender/pkg/models"
 	"github.com/tsawler/goblender/pkg/templates"
 	"net/http"
 )
@@ -24,10 +25,13 @@ type JSONResponse struct {
 
 // SomeHandler is an example handler
 func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
-	helpers.Render(w, r, "client-sample.page.tmpl", &templates.TemplateData{})
+	pg := models.Page{}
+	helpers.Render(w, r, "ft-vote.page.tmpl", &templates.TemplateData{
+		Page: pg,
+	})
 }
 
 // SomeHandler is an example handler
 func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
-	helpers.Render(w, r, "client-sample.page.tmpl", &templates.TemplateData{})
+	helpers.Render(w, r, "pt-vote.page.tmpl", &templates.TemplateData{})
 }
