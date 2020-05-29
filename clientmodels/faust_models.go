@@ -8,6 +8,7 @@ import (
 type FTMember struct {
 	ID        int
 	Email     string
+	Voted     int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -16,14 +17,15 @@ type FTMember struct {
 type PTMember struct {
 	ID        int
 	Email     string
+	Voted     int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-type VoteResult struct {
+type VoteTotals struct {
 	ID        int
-	MemberID  int
-	Vote      int
+	Yes       int
+	No        int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
