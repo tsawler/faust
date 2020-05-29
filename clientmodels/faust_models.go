@@ -21,5 +21,9 @@ type PTMember struct {
 }
 
 type VoteResult struct {
-	ID int
+	ID        int
+	MemberID  int
+	Vote      int
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }

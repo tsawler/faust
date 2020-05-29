@@ -1,5 +1,6 @@
 create_table("ft_members") {
     t.Column("id", "integer", {primary: true})
+    t.Column("voted", "integer", {"default": 0})
     t.Column("email", "string", {"default": ""})
 }
 
