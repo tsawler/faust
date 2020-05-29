@@ -22,8 +22,12 @@ type JSONResponse struct {
 //	pageHandlers.Home(w, r)
 //}
 
+// SomeHandler is an example handler
+func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
+	helpers.Render(w, r, "client-sample.page.tmpl", &templates.TemplateData{})
+}
 
 // SomeHandler is an example handler
-func SomeHandler(w http.ResponseWriter, r *http.Request) {
+func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	helpers.Render(w, r, "client-sample.page.tmpl", &templates.TemplateData{})
 }
