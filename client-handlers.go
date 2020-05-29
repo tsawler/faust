@@ -245,3 +245,34 @@ func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte("Sent"))
 }
+
+func VoteResults(w http.ResponseWriter, r *http.Request) {
+	ft, err := dbModel.GetAllFTMembers()
+	pt, err := dbModel.GetAllPTMembers()
+
+	intMap := make(map[string]int)
+	intMap["no_ft"] = len(ft)
+	intMap["no_pt"] = len(pt)
+
+	resp_ft := 0
+	resp_pt := 0
+
+	for _, x := range ft {
+		if x.Voted == 1 {
+			resp_ft++
+		}
+	}
+
+	for _, x := range pt {
+		if x.Voted == 1 {
+			resp_pt++
+		}
+	}
+
+	intMap["resp_ft"] = resp_ft
+	intMap["resp_pt"] = resp_pt
+
+	helpers.Render(w, r, "vote-results.page.tmpl", &templates.TemplateData{
+		IntMap: intMap,
+	})
+}
