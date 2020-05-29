@@ -12,6 +12,7 @@ type DBModel struct {
 	DB *sql.DB
 }
 
+// GetPTMember gets a member
 func (m *DBModel) GetPTMember(id int) (clientmodels.PTMember, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -36,6 +37,7 @@ func (m *DBModel) GetPTMember(id int) (clientmodels.PTMember, error) {
 	return s, nil
 }
 
+// GetFTMember gets a member
 func (m *DBModel) GetFTMember(id int) (clientmodels.FTMember, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -60,6 +62,7 @@ func (m *DBModel) GetFTMember(id int) (clientmodels.FTMember, error) {
 	return s, nil
 }
 
+// VoteYesPT votes yes
 func (m *DBModel) VoteYesFT(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -79,6 +82,7 @@ func (m *DBModel) VoteYesFT(id int) error {
 	return nil
 }
 
+// VoteNoFT votes no
 func (m *DBModel) VoteNoFT(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -98,6 +102,7 @@ func (m *DBModel) VoteNoFT(id int) error {
 	return nil
 }
 
+// VoteYesPT votes yes
 func (m *DBModel) VoteYesPT(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -117,6 +122,7 @@ func (m *DBModel) VoteYesPT(id int) error {
 	return nil
 }
 
+// VoteNoPT votes no
 func (m *DBModel) VoteNoPT(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -134,4 +140,18 @@ func (m *DBModel) VoteNoPT(id int) error {
 	}
 
 	return nil
+}
+
+// GetAllFTMembers get all ft members
+func (m *DBModel) GetAllFTMembers() ([]clientmodels.FTMember, error) {
+	var members []clientmodels.FTMember
+
+	return members, nil
+}
+
+// GetAllPTMembers gets all pt members
+func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
+	var members []clientmodels.PTMember
+
+	return members, nil
 }
