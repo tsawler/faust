@@ -3,6 +3,7 @@ package clientdb
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/tsawler/goblender/client/clienthandlers/clientmodels"
 	"time"
 )
@@ -144,14 +145,57 @@ func (m *DBModel) VoteNoPT(id int) error {
 
 // GetAllFTMembers get all ft members
 func (m *DBModel) GetAllFTMembers() ([]clientmodels.FTMember, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
 	var members []clientmodels.FTMember
 
+	query := "select id, first_name, email from ft_members order by id"
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	defer rows.Close()
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	for rows.Next() {
+		s := &clientmodels.FTMember{}
+		err = rows.Scan(
+			&s.ID,
+			&s.FirstName,
+			&s.Email,
+		)
+	}
 	return members, nil
 }
 
 // GetAllPTMembers gets all pt members
 func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
 	var members []clientmodels.PTMember
 
+	query := "select id, first_name, email from ft_members order by id"
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	defer rows.Close()
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	for rows.Next() {
+		s := &clientmodels.PTMember{}
+		err = rows.Scan(
+			&s.ID,
+			&s.FirstName,
+			&s.Email,
+		)
+		members = append(members, s)
+	}
 	return members, nil
 }

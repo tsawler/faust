@@ -2,7 +2,6 @@ package clienthandlers
 
 import (
 	"fmt"
-	"github.com/tsawler/goblender/client/clienthandlers/clientmodels"
 	channel_data "github.com/tsawler/goblender/pkg/channel-data"
 	"github.com/tsawler/goblender/pkg/helpers"
 	"github.com/tsawler/goblender/pkg/templates"
@@ -95,17 +94,15 @@ func PostFT(w http.ResponseWriter, r *http.Request) {
 
 // SendInvitations sends the invitations
 func SendInvitations(w http.ResponseWriter, r *http.Request) {
-	var pt []clientmodels.PTMember
-
-	m := clientmodels.PTMember{
-		ID:        1,
-		FirstName: "Trevor",
-		Email:     "tsawler@stu.ca",
+	pt, err := dbModel.GetAllPTMembers()
+	if err != nil {
+		errorLog.Println(err)
+		helpers.ClientError(w, http.StatusBadRequest)
+		return
 	}
 
-	pt = append(pt, m)
-
 	serverURL := app.ServerURL
+
 	for _, x := range pt {
 		linkEn := fmt.Sprintf("%s/faust/pt-vote/%d", serverURL, 1)
 		urlsigner.NewURLSigner(app.URLSignerKey)
