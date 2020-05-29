@@ -10,6 +10,7 @@ import (
 	"github.com/tsawler/goblender/pkg/urlsigner"
 	"html/template"
 	"net/http"
+	"strconv"
 )
 
 // JSONResponse is a generic struct to hold json responses
@@ -28,11 +29,35 @@ func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
 
 // DisplayPTVoteForm displays pt form
 func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
+
+	// validate the link
+	url := r.RequestURI
+	testURL := fmt.Sprintf("%s%s", app.ServerURL, url)
+	urlsigner.NewURLSigner(app.URLSignerKey)
+	okay := urlsigner.VerifyToken(testURL)
+
+	if !okay {
+		// invalid url signature, so just throw a generic error page at the user
+		helpers.ClientError(w, http.StatusBadRequest)
+		return
+	}
+
+	// make sure they have not voted already
+	id, _ := strconv.Atoi(r.URL.Query().Get(":ID"))
+	member, err := dbModel.GetPTMember(id)
+	if err != nil {
+		// invalid url signature, so just throw a generic error page at the user
+		errorLog.Println(err)
+		helpers.ClientError(w, http.StatusBadRequest)
+		return
+	}
+
+	infoLog.Println("Member:", member.FirstName)
+
 	helpers.Render(w, r, "pt-vote.page.tmpl", &templates.TemplateData{})
 }
 
 func SendInvitations(w http.ResponseWriter, r *http.Request) {
-
 	var pt []clientmodels.PTMember
 
 	m := clientmodels.PTMember{

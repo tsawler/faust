@@ -1,6 +1,7 @@
 package clienthandlers
 
 import (
+	"github.com/tsawler/goblender/client/clienthandlers/clientdb"
 	"github.com/tsawler/goblender/pkg/backups"
 	"github.com/tsawler/goblender/pkg/config"
 	"github.com/tsawler/goblender/pkg/driver"
@@ -23,6 +24,8 @@ var roleHandlers *handlers.RoleDBRepo
 var historyHandlers *handlers.HistoryDBRepo
 var postHandlers *handlers.PostDBRepo
 var backupRepo *backups.BackupDBRepo
+
+var dbModel *clientdb.DBModel
 
 // ClientInit gives us access to site values for client code.
 func ClientInit(c config.AppConfig, p *driver.DB, br *backups.BackupDBRepo) {
@@ -60,6 +63,8 @@ func ClientInit(c config.AppConfig, p *driver.DB, br *backups.BackupDBRepo) {
 		pageHandlers = handlers.NewPageHandler(app, p, userHandlers, preferenceHandlers, backupRepo)
 		postHandlers = handlers.NewPostHandlers(app, p, pageHandlers)
 	}
+
+	dbModel = &clientdb.DBModel{DB: p.SQL}
 
 	// create client middleware
 	NewClientMiddleware(app, userHandlers)
