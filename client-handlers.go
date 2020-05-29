@@ -96,7 +96,7 @@ func PostFT(w http.ResponseWriter, r *http.Request) {
 }
 
 // SendInvitations sends the invitations
-func SendInvitations(w http.ResponseWriter, r *http.Request) {
+func SendInvitationsPT(w http.ResponseWriter, r *http.Request) {
 	pt, err := dbModel.GetAllPTMembers()
 	if err != nil {
 		errorLog.Println(err)
@@ -116,7 +116,57 @@ func SendInvitations(w http.ResponseWriter, r *http.Request) {
 
 <p>Please use the link below to cast your vote to ratify the collective agreement for your unit. Note that voting is anonymous, and that the link below will only work once.</p>
 
-<p>You have until Tuesday at midnight to cast your vote.</p>
+<p>You have until Thursday, June 4th at 5:00PM to cast your vote.</p>
+
+<p>Thank you.</p>
+
+<p><a class="btn btn-primary" href="%s">Click here to cast your vote</a"></p>
+`, x.FirstName, signedLinkEn)
+
+		mailMessage := channel_data.MailData{
+			ToName:      "",
+			ToAddress:   x.Email,
+			FromName:    "FAUST",
+			FromAddress: "faust@stu.ca",
+			Subject:     "Online vote to ratify agreement",
+			Content:     template.HTML(html),
+			Template:    "generic-email.mail.tmpl",
+			CC:          nil,
+			UseHermes:   false,
+			Attachments: nil,
+			StringMap:   nil,
+			IntMap:      nil,
+			FloatMap:    nil,
+			RowSets:     nil,
+		}
+
+		helpers.SendEmail(mailMessage)
+	}
+
+	w.Write([]byte("Sent"))
+}
+
+func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
+	pt, err := dbModel.GetAllFTMembers()
+	if err != nil {
+		errorLog.Println(err)
+		helpers.ClientError(w, http.StatusBadRequest)
+		return
+	}
+
+	serverURL := app.ServerURL
+
+	for _, x := range pt {
+		linkEn := fmt.Sprintf("%s/faust/ft-vote/%d", serverURL, x.ID)
+		urlsigner.NewURLSigner(app.URLSignerKey)
+		signedLinkEn := urlsigner.GenerateTokenFromString(linkEn)
+
+		html := fmt.Sprintf(`
+<p>Dear %s:</p>
+
+<p>Please use the link below to cast your vote to ratify the collective agreement for your unit. Note that voting is anonymous, and that the link below will only work once.</p>
+
+<p>You have until Thursday, June 4th at 5:00PM to cast your vote.</p>
 
 <p>Thank you.</p>
 
