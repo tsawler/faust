@@ -1,0 +1,13 @@
+create_table("voting_results") {
+    t.Column("id", "integer", {primary: true})
+    t.Column("member_id", "integer", {})
+    t.Column("vote", "integer", {"unsigned": true})
+}
+
+sql("alter table voting_results alter column created_at set default now();")
+sql("alter table voting_results alter column updated_at set default now();")
+
+sql(`CREATE TRIGGER set_timestamp
+    BEFORE UPDATE ON voting_results
+    FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();`)
