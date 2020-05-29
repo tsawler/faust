@@ -167,6 +167,7 @@ func (m *DBModel) GetAllFTMembers() ([]clientmodels.FTMember, error) {
 			&s.FirstName,
 			&s.Email,
 		)
+		members = append(members, *s)
 	}
 	return members, nil
 }
@@ -195,7 +196,7 @@ func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
 			&s.FirstName,
 			&s.Email,
 		)
-		members = append(members, s)
+		members = append(members, *s)
 	}
 	return members, nil
 }
