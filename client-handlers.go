@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // JSONResponse is a generic struct to hold json responses
@@ -19,6 +20,15 @@ type JSONResponse struct {
 
 // DisplayFTVoteForm displays ft form
 func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
+
+	then := time.Date(2020, 06, 4, 17, 00, 00, 651387237, time.UTC)
+	if time.Now().After(then) {
+		infoLog.Println("checking url failed")
+		session.Put(r.Context(), "error", "Voting is closed")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
 	// validate the link
 	url := r.RequestURI
 	testURL := fmt.Sprintf("%s%s", app.ServerURL, url)
@@ -57,6 +67,14 @@ func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
 // DisplayPTVoteForm displays pt form
 func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	session.Put(r.Context(), "lang", "en")
+
+	then := time.Date(2020, 06, 4, 17, 00, 00, 651387237, time.UTC)
+	if time.Now().After(then) {
+		infoLog.Println("checking url failed")
+		session.Put(r.Context(), "error", "Voting is closed")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 
 	// validate the link
 	url := r.RequestURI
@@ -172,7 +190,7 @@ func SendInvitationsPT(w http.ResponseWriter, r *http.Request) {
 
 <p>Thank you.</p>
 
-<p><a class="btn btn-primary" href="%s">Click here to cast your vote</a"></p>
+<p><a class="btn btn-primary" href="%s">Click here to cast your vote</a></p>
 
 <p>
 --<br>
@@ -231,7 +249,7 @@ func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
 
 <p>Thank you.</p>
 
-<p><a class="btn btn-primary" href="%s">Click here to cast your vote</a"></p>
+<p><a class="btn btn-primary" href="%s">Click here to cast your vote</a></p>
 
 <p>
 --<br>
