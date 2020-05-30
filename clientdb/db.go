@@ -150,9 +150,7 @@ func (m *DBModel) GetAllFTMembers() ([]clientmodels.FTMember, error) {
 
 	var members []clientmodels.FTMember
 
-	// TODO: remove where
-
-	query := "select id, first_name, email, voted from ft_members where id = 87 order by id"
+	query := "select id, first_name, email, voted from ft_members order by id"
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	defer rows.Close()
@@ -182,9 +180,7 @@ func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
 
 	var members []clientmodels.PTMember
 
-	// TODO: remove where
-
-	query := "select id, first_name, email, voted from pt_members where id in (80) order by id"
+	query := "select id, first_name, email, voted from pt_members order by id"
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	defer rows.Close()
