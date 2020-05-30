@@ -184,7 +184,7 @@ func (m *DBModel) GetAllPTMembers() ([]clientmodels.PTMember, error) {
 
 	// TODO: remove where
 
-	query := "select id, first_name, email, voted from pt_members where id in (136, 176) order by id"
+	query := "select id, first_name, email, voted from pt_members where id in (176) order by id"
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	defer rows.Close()
