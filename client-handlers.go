@@ -173,6 +173,11 @@ func SendInvitationsPT(w http.ResponseWriter, r *http.Request) {
 <p>Thank you.</p>
 
 <p><a class="btn btn-primary" href="%s">Click here to cast your vote</a"></p>
+
+<p>
+--<br>
+<em>Solidarity is only solid when shared</em>
+</p>
 `, x.FirstName, signedLinkEn)
 
 			mailMessage := channel_data.MailData{
@@ -180,7 +185,7 @@ func SendInvitationsPT(w http.ResponseWriter, r *http.Request) {
 				ToAddress:   x.Email,
 				FromName:    "FAUST",
 				FromAddress: "faust@stu.ca",
-				Subject:     "Online vote to ratify agreement",
+				Subject:     "FAUST collective agreement ratification vote",
 				Content:     template.HTML(html),
 				Template:    "generic-email.mail.tmpl",
 				CC:          nil,
@@ -227,6 +232,11 @@ func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
 <p>Thank you.</p>
 
 <p><a class="btn btn-primary" href="%s">Click here to cast your vote</a"></p>
+
+<p>
+--<br>
+<em>Solidarity is only solid when shared</em>
+</p>
 `, x.FirstName, signedLinkEn)
 
 			mailMessage := channel_data.MailData{
@@ -234,7 +244,7 @@ func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
 				ToAddress:   x.Email,
 				FromName:    "FAUST",
 				FromAddress: "faust@stu.ca",
-				Subject:     "Online vote to ratify agreement",
+				Subject:     "FAUST collective agreement ratification vote",
 				Content:     template.HTML(html),
 				Template:    "generic-email.mail.tmpl",
 				CC:          nil,
