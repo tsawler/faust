@@ -63,6 +63,56 @@ func (m *DBModel) GetFTMember(id int) (clientmodels.FTMember, error) {
 	return s, nil
 }
 
+// GetFTMember gets a member
+func (m *DBModel) GetPTMemberByEmail(email string) (clientmodels.PTMember, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var s clientmodels.PTMember
+
+	query := `select e.id, e.first_name, e.email, e.voted
+			from pt_members e
+			where e.email = $1`
+	row := m.DB.QueryRowContext(ctx, query, email)
+
+	err := row.Scan(
+		&s.ID,
+		&s.FirstName,
+		&s.Email,
+		&s.Voted,
+	)
+	if err != nil {
+		return s, err
+	}
+
+	return s, nil
+}
+
+// GetFTMember gets a member
+func (m *DBModel) GetFTMemberByEmail(email string) (clientmodels.FTMember, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var s clientmodels.FTMember
+
+	query := `select e.id, e.first_name, e.email, e.voted
+			from ft_members e
+			where e.email = $1`
+	row := m.DB.QueryRowContext(ctx, query, email)
+
+	err := row.Scan(
+		&s.ID,
+		&s.FirstName,
+		&s.Email,
+		&s.Voted,
+	)
+	if err != nil {
+		return s, err
+	}
+
+	return s, nil
+}
+
 // VoteYesPT votes yes
 func (m *DBModel) VoteYesFT(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
