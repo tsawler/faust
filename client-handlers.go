@@ -21,7 +21,7 @@ type JSONResponse struct {
 // DisplayFTVoteForm displays ft form
 func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
 
-	then := time.Date(2020, 06, 4, 17, 00, 00, 651387237, time.UTC)
+	then := time.Date(2020, 06, 4, 17, 00, 00, 651387237, time.Local)
 	if time.Now().After(then) {
 		infoLog.Println("checking url failed")
 		session.Put(r.Context(), "error", "Voting is closed")
@@ -68,7 +68,7 @@ func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
 func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	session.Put(r.Context(), "lang", "en")
 
-	then := time.Date(2020, 06, 4, 17, 00, 00, 651387237, time.UTC)
+	then := time.Date(2020, 06, 4, 17, 00, 00, 651387237, time.Local)
 	if time.Now().After(then) {
 		infoLog.Println("checking url failed")
 		session.Put(r.Context(), "error", "Voting is closed")
