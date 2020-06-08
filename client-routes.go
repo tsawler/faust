@@ -19,12 +19,13 @@ func ClientRoutes(mux *pat.PatternServeMux, standardMiddleWare, dynamicMiddlewar
 	mux.Get("/faust/pt-vote/:ID", dynamicMiddleware.ThenFunc(DisplayPTVoteForm))
 	mux.Post("/faust/pt-vote", dynamicMiddleware.ThenFunc(PostPT))
 
-	mux.Get("/admin/votes/send", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(SendInvitePage))
-	mux.Get("/faust/invite/pt", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(SendInvitationsPT))
-	mux.Get("/faust/invite/ft", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(SendInvitationsFT))
-	mux.Get("/admin/votes/results", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(VoteResults))
-	mux.Get("/admin/votes/resend", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(Resend))
-	mux.Post("/admin/votes/resend", dynamicMiddleware.Append(mw.Auth).Append(mw.SuperRole).ThenFunc(PostResend))
+	mux.Get("/admin/votes/send", dynamicMiddleware.Append(mw.Auth).Append(VotesRole).ThenFunc(SendInvitePage))
+	mux.Get("/faust/invite/pt", dynamicMiddleware.Append(mw.Auth).Append(VotesRole).ThenFunc(SendInvitationsPT))
+	mux.Get("/faust/invite/ft", dynamicMiddleware.Append(mw.Auth).Append(VotesRole).ThenFunc(SendInvitationsFT))
+	mux.Get("/admin/votes/results", dynamicMiddleware.Append(mw.Auth).Append(VotesRole).ThenFunc(VoteResults))
+	mux.Get("/admin/votes/resend", dynamicMiddleware.Append(mw.Auth).Append(VotesRole).ThenFunc(Resend))
+	mux.Post("/admin/votes/resend", dynamicMiddleware.Append(mw.Auth).Append(VotesRole).ThenFunc(PostResend))
+
 	// public folder
 	fileServer := http.FileServer(http.Dir("./client/clienthandlers/public/"))
 	mux.Get("/client/static/", http.StripPrefix("/client/static", fileServer))

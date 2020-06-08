@@ -3,7 +3,6 @@ package clienthandlers
 import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/tsawler/goblender/pkg/config"
-	"github.com/tsawler/goblender/pkg/handlers"
 	"github.com/tsawler/goblender/pkg/helpers"
 	"net/http"
 )
@@ -17,21 +16,20 @@ var preferenceMap map[string]string
 var inProduction bool
 
 // NewClientMiddleware sets app config for middleware
-func NewClientMiddleware(app config.AppConfig, uh *handlers.UserDBRepo) {
+func NewClientMiddleware(app config.AppConfig) {
 	serverName = app.ServerName
 	live = app.InProduction
 	domain = app.Domain
 	preferenceMap = app.PreferenceMap
 	session = app.Session
-	userHandlers = uh
 	inProduction = app.InProduction
 }
 
 // SomeRole is a sample role
-func SomeRole(next http.Handler) http.Handler {
+func VotesRole(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userId := session.GetInt(r.Context(), "userID")
-		ok := checkRole("some-role", userId)
+		ok := checkRole("votes", userId)
 		if ok {
 			next.ServeHTTP(w, r)
 		} else {
@@ -42,7 +40,7 @@ func SomeRole(next http.Handler) http.Handler {
 
 // checkRole checks roles for the user
 func checkRole(role string, userId int) bool {
-	user, _ := userHandlers.GetById(userId)
+	user, _ := repo.DB.GetUserById(userId)
 	roles := user.Roles
 
 	if _, ok := roles[role]; ok {
