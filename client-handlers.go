@@ -2,6 +2,7 @@ package clienthandlers
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	channel_data "github.com/tsawler/goblender/pkg/channel-data"
 	"github.com/tsawler/goblender/pkg/helpers"
 	"github.com/tsawler/goblender/pkg/templates"
@@ -42,7 +43,7 @@ func DisplayFTVoteForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// make sure they have not voted already
-	id, _ := strconv.Atoi(r.URL.Query().Get(":ID"))
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
 	member, err := dbModel.GetFTMember(id)
 	if err != nil {
 		session.Put(r.Context(), "error", "Invalid URL!")
@@ -90,7 +91,7 @@ func DisplayPTVoteForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// make sure they have not voted already
-	id, _ := strconv.Atoi(r.URL.Query().Get(":ID"))
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
 	member, err := dbModel.GetPTMember(id)
 	if err != nil {
 		// invalid url signature, so just throw a generic error page at the user
