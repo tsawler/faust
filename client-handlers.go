@@ -3,7 +3,7 @@ package clienthandlers
 import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
-	channel_data "github.com/tsawler/goblender/pkg/channel-data"
+	channeldata "github.com/tsawler/goblender/pkg/channel-data"
 	"github.com/tsawler/goblender/pkg/helpers"
 	"github.com/tsawler/goblender/pkg/templates"
 	"github.com/tsawler/goblender/pkg/urlsigner"
@@ -164,7 +164,7 @@ func PostFT(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-// SendInvitations sends the invitations
+// SendInvitationsPT sends the invitations
 func SendInvitationsPT(w http.ResponseWriter, r *http.Request) {
 	pt, err := dbModel.GetAllPTMembers()
 	if err != nil {
@@ -199,7 +199,7 @@ func SendInvitationsPT(w http.ResponseWriter, r *http.Request) {
 </p>
 `, x.FirstName, signedLinkEn)
 
-			mailMessage := channel_data.MailData{
+			mailMessage := channeldata.MailData{
 				ToName:      "",
 				ToAddress:   x.Email,
 				FromName:    "FAUST",
@@ -267,7 +267,7 @@ func PostResend(w http.ResponseWriter, r *http.Request) {
 </p>
 `, x.FirstName, signedLinkEn)
 
-		mailMessage := channel_data.MailData{
+		mailMessage := channeldata.MailData{
 			ToName:      "",
 			ToAddress:   x.Email,
 			FromName:    "FAUST",
@@ -320,7 +320,7 @@ func PostResend(w http.ResponseWriter, r *http.Request) {
 </p>
 `, x.FirstName, signedLinkEn)
 
-		mailMessage := channel_data.MailData{
+		mailMessage := channeldata.MailData{
 			ToName:      "",
 			ToAddress:   x.Email,
 			FromName:    "FAUST",
@@ -379,7 +379,7 @@ func SendInvitationsFT(w http.ResponseWriter, r *http.Request) {
 </p>
 `, x.FirstName, signedLinkEn)
 
-			mailMessage := channel_data.MailData{
+			mailMessage := channeldata.MailData{
 				ToName:      "",
 				ToAddress:   x.Email,
 				FromName:    "FAUST",
